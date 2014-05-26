@@ -15,7 +15,8 @@
         "php": ">=5.3.3",
         "ext-curl": "*",
         "ext-simplexml": "*",
-        "thapp/xmlbuilder": "0.1.*"
+        "thapp/xmlbuilder": "0.1.*",
+        "braintree/braintree_php": "2.27.2"
     },
     "repositories": [
         {
