@@ -22,7 +22,7 @@ class BraintreeTest extends AktiveMerchant\TestCase
         $login_info = $this->getFixtures()->offsetGet('braintree');
 
         $this->gateway = new BraintreeBlue($login_info);
-        $this->amount = mt_rand(0, 10);
+        $this->amount = mt_rand(1, 10);
         $this->creditcard = new CreditCard(
             array(
                 "first_name" => "John",
@@ -61,6 +61,21 @@ class BraintreeTest extends AktiveMerchant\TestCase
         );
 
         $this->assertTrue(!is_null($response->authorization()));
+        print_r($response);
+
+    }
+
+    public function testSuccessfulPurchase()
+    {
+        //$this->mock_request($this->successful_purchase_response());
+
+        $response = $this->gateway->purchase(
+            $this->amount,
+            $this->creditcard,
+            $this->options
+        );
+
+        print_r($response);
 
     }
 

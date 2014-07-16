@@ -100,10 +100,11 @@ class BraintreeBlue extends Gateway implements
      */
     public function authorize($money, CreditCard $creditcard, $options = array())
     {
+        $options = new Options($options);
         $this->post = array();
 
         $this->post['amount'] = $this->amount($money);
-        //$this->add_invoice($options);
+        $this->add_invoice($options);
         $this->add_creditcard($creditcard);
         //$this->add_address($options);
         //$this->add_customer_data($options);
@@ -117,13 +118,23 @@ class BraintreeBlue extends Gateway implements
     public function purchase($money, CreditCard $creditcard, $options = array())
     {
         $options = new Options($options);
+        $this->post = array();
 
+        $this->post['amount'] = $this->amount($money);
         $this->add_invoice($options);
         $this->add_creditcard($creditcard);
         //$this->add_address($options);
         //$this->add_customer_data($options);
 
-        return $this->commit('sale', $money);
+        return $this->commit(
+            'sale',
+            $money,
+            array(
+                'options' => array(
+                    'submitForSettlement' => true
+                )
+            )
+        );
     }
 
     /**
@@ -285,6 +296,10 @@ class BraintreeBlue extends Gateway implements
         \Braintree_Configuration::merchantId($this->options->merchant_id);
         \Braintree_Configuration::publicKey($this->options->public_key);
         \Braintree_Configuration::privateKey($this->options->private_key);
+
+        $this->post = array_merge($this->post, $parameters);
+
+        print_r($this->post);
 
         $result = \Braintree_Transaction::{$action}($this->post);
 
